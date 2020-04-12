@@ -10,11 +10,13 @@ sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
 sem_t* fluPatient;
 int* potentialCPatients;
+//int* coronaPatient;
+//int* fluPatient;
 
 void* tests_on_patients (void* param){ 
-    //need to increment the shared variable potentialCPatients
+    // need to increment the shared variable potentialCPatients
     // int sem_wait(sem_t *sem);
-    sem_wait(&potentialCPatients_sem);
+    sem_wait(potentialCPatients_sem);
 
     //Using the shared resource
 
@@ -22,14 +24,56 @@ void* tests_on_patients (void* param){
     *potentialCPatients = (*potentialCPatients) + 1;
     printf("Value of *potentialCPatients after inc : %d\n", *potentialCPatients);
 
-    sem_post(&potentialCPatients_sem);
+    sem_post(potentialCPatients_sem);
 
-    // With the help of rand() a number in range can be generated as num = (rand() % (upper – lower + 1)) + lower
+    // With the help of rand() a number in range can be generated as num = (rand() % (upper–lower+1)) + lower
 
-    int test_result = (rand() % (1 – 0 + 1)) + 0;
+    int test_result = (rand() % 2);
     printf("The random number was : %d\n", test_result);
+    // test_result = 0 --> Negative for Corona Virus --> FluPatient
+    // test_result = 1 --> Positive for Corona Virus --> CoronaPatient
 
+    if (test_result == 0){
 
+        //Signal semaphore fluPatient
+        // int sem_post(sem_t *sem);
+        sem_post(fluPatient);
+
+        //Decrement the shared variable --> potentialCPatients
+
+        // int sem_wait(sem_t *sem);
+        sem_wait(potentialCPatients_sem);
+
+        //Using the shared resource
+
+        printf("Value of *potentialCPatients before dec : %d\n", *potentialCPatients);
+        *potentialCPatients = (*potentialCPatients) - 1;
+        printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
+
+        sem_post(potentialCPatients_sem);
+
+    }
+    else if (test_result == 1){
+        //Signal semaphore coronaPatient
+        // int sem_post(sem_t *sem);
+        sem_post(coronaPatient);
+
+        //Decrement the shared variable --> potentialCPatients
+
+        // int sem_wait(sem_t *sem);
+        sem_wait(potentialCPatients_sem);
+
+        //Using the shared resource
+
+        printf("Value of *potentialCPatients before dec : %d\n", *potentialCPatients);
+        *potentialCPatients = (*potentialCPatients) - 1;
+        printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
+
+        sem_post(potentialCPatients_sem);
+
+    }
+
+    pthread_exit(0);
 }
 
 int main(){ 
@@ -111,13 +155,32 @@ int main(){
 
     // Wait until all threads have done their work
     for (i = 0; i < total_pp; i++) {
-        pthread_join(tids[i], NULL);        
+        pthread_join(tids[i], NULL);
+        
+        printf("Value of *potentialCPatients : %d\n", *potentialCPatients); 
+
+        int *fluPatient;
+        sem_getvalue(fluPatient, fluPatient);
+        printf("Value of *fluPatient : %d\n", *fluPatient);
+
+        int *coronaPatient;
+        sem_getvalue(fluPatient, coronaPatient);
+        printf("Value of *coronaPatient : %d\n", *coronaPatient);       
     }   
 
-    // All threads done executing  
+    // All threads done executing 
+    printf("Done all the work\n");
+    // Shared memory has to be detached for potentialCPatients variable = good practice
 
+        shmdt(potentialCPatients);
+        shmctl(shmid, IPC_RMID, 0);
 
+        //delete semaphores
+        sem_destroy(potentialCPatients_sem);
+        sem_destroy(coronaPatient);
+        sem_destroy(fluPatient);
 
+    printf("Cleared all semaphore stuff\n");
 
     return 0;
 }
