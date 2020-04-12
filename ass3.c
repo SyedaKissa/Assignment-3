@@ -10,8 +10,9 @@ sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
 sem_t* fluPatient;
 int* potentialCPatients;
-//int* coronaPatient;
-//int* fluPatient;
+//int *fluPatient1;
+//int *coronaPatient1;
+
 
 void* tests_on_patients (void* param){ 
     // need to increment the shared variable potentialCPatients
@@ -34,6 +35,7 @@ void* tests_on_patients (void* param){
     // test_result = 1 --> Positive for Corona Virus --> CoronaPatient
 
     if (test_result == 0){
+        printf("The random number was inside if1: %d\n", test_result);
 
         //Signal semaphore fluPatient
         // int sem_post(sem_t *sem);
@@ -54,6 +56,7 @@ void* tests_on_patients (void* param){
 
     }
     else if (test_result == 1){
+        printf("The random number was inside if 2: %d\n", test_result);
         //Signal semaphore coronaPatient
         // int sem_post(sem_t *sem);
         sem_post(coronaPatient);
@@ -156,16 +159,18 @@ int main(){
     // Wait until all threads have done their work
     for (i = 0; i < total_pp; i++) {
         pthread_join(tids[i], NULL);
-        
+
         printf("Value of *potentialCPatients : %d\n", *potentialCPatients); 
 
-        int *fluPatient;
-        sem_getvalue(fluPatient, fluPatient);
-        printf("Value of *fluPatient : %d\n", *fluPatient);
+        //int *fluPatient1;
+        printf("Here\n");
+        /*sem_getvalue(fluPatient, fluPatient1);
+        printf("Not Here\n");
+        printf("Value of *fluPatient : %d\n", *fluPatient1);
 
-        int *coronaPatient;
-        sem_getvalue(fluPatient, coronaPatient);
-        printf("Value of *coronaPatient : %d\n", *coronaPatient);       
+        //int *coronaPatient1;
+        sem_getvalue(coronaPatient, coronaPatient1);
+        printf("Value of *coronaPatient : %d\n", *coronaPatient1);*/       
     }   
 
     // All threads done executing 
