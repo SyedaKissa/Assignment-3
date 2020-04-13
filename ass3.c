@@ -190,7 +190,7 @@ int main(){
 
     int coronaPatient1;
     sem_getvalue(coronaPatient, &coronaPatient1);
-    printf("Value of coronaPatient semaphore variable : %d\n", coronaPatient1); 
+    printf("Value of coronaPatient semaphore variable: %d\n", coronaPatient1); 
 
     // Shared memory has to be detached for potentialCPatients variable = good practice
     shmdt(potentialCPatients);
