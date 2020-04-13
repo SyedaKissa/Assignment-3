@@ -10,9 +10,6 @@ sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
 sem_t* fluPatient;
 int* potentialCPatients;
-int* fluPatient1;
-int* coronaPatient1;
-
 
 void* tests_on_patients (void* param){ 
     // need to increment the shared variable potentialCPatients
@@ -165,26 +162,35 @@ int main(){
         printf("Value of *potentialCPatients : %d\n", *potentialCPatients); 
 
         //int *fluPatient1;
-        printf("Here\n");
-
-        //printf("Value of *fluPatient : %d\n", *fluPatient);
-        //1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        int result = sem_getvalue(fluPatient, fluPatient1);
-        if ( result == -1){
-            printf("You got me\n");
-            exit(0);
-        }
-
-        printf("Not Here\n");
-        printf("Value of *fluPatient : %d\n", *fluPatient1);
-
-        //int *coronaPatient1;
-        sem_getvalue(coronaPatient, coronaPatient1);
-        printf("Value of *coronaPatient : %d\n", *coronaPatient1);      
+        printf("Here\n");             
     }   
 
     // All threads done executing 
     printf("Done all the work\n");
+
+    // Printing semaphore values of Coronapatient and flupatient semaphores
+
+    // int sem_getvalue(sem_t * sem, int * value); 
+    // where value = A pointer to the integer that contains the value of the semaphore.
+    // sem_getvalue() places the current value of the semaphore pointed to "sem" into the integer pointed to by value
+
+    // The sem_getvalue() function retrieves the value of a named or unnamed semaphore. If the current 
+    // value of the semaphore is zero and there are threads waiting on the semaphore, a negative value is 
+    // returned. The absolute value of this negative value is the number of threads waiting on the semaphore.
+    // That is why printing values after all threads are done    
+
+    /* Error if we do this
+    int* fluPatient1;    
+    sem_getvalue(fluPatient, fluPatient1);
+    printf("Value of *fluPatient : %d\n", *fluPatient1);*/
+
+    int fluPatient1;    
+    sem_getvalue(fluPatient, &fluPatient1);
+    printf("Value of fluPatient semaphore variable: %d\n", fluPatient1);
+
+    int coronaPatient1;
+    sem_getvalue(coronaPatient, &coronaPatient1);
+    printf("Value of coronaPatient semaphore variable : %d\n", coronaPatient1); 
 
     // Shared memory has to be detached for potentialCPatients variable = good practice
     shmdt(potentialCPatients);
