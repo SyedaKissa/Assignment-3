@@ -10,8 +10,8 @@ sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
 sem_t* fluPatient;
 int* potentialCPatients;
-//int *fluPatient1;
-//int *coronaPatient1;
+//int* fluPatient1;
+//int* coronaPatient1;
 
 
 void* tests_on_patients (void* param){ 
@@ -82,11 +82,11 @@ void* tests_on_patients (void* param){
 int main(){ 
 
     //Generate key --> parameter1 = file that is valid and available
-    key_t shmkey = ftok("s.c",6); //Directory and number, file to key, it can be the current file also
-    printf("shmkey : %d\n",shmkey); 
+    //key_t shmkey = ftok("s.c",6); //Directory and number, file to key, it can be the current file also
+    //printf("shmkey : %d\n",shmkey); 
 
     //Create Shared Memory for integer potentialCPatients (That is why size is of an int)
-    int shmid = shmget(shmkey, sizeof(int), 0644|IPC_CREAT); 
+    int shmid = shmget(121121, sizeof(int), 0644|IPC_CREAT); 
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
 
     if (shmid < 0){
@@ -128,7 +128,7 @@ int main(){
     initial_value = 0;
 
     coronaPatient = sem_open ("coronaPatient_sem", O_CREAT|O_EXCL, 0645, initial_value);
-    sem_unlink("coronaPatient");
+    sem_unlink("coronaPatient_sem");
     printf("coronaPatient_sem INTIALIZATION completed\n");
 
     fluPatient = sem_open ("fluPatient_sem", O_CREAT|O_EXCL, 0646, initial_value);
@@ -164,6 +164,11 @@ int main(){
 
         //int *fluPatient1;
         printf("Here\n");
+
+
+
+        printf("Here\n");
+
         /*sem_getvalue(fluPatient, fluPatient1);
         printf("Not Here\n");
         printf("Value of *fluPatient : %d\n", *fluPatient1);
@@ -177,13 +182,13 @@ int main(){
     printf("Done all the work\n");
     // Shared memory has to be detached for potentialCPatients variable = good practice
 
-        shmdt(potentialCPatients);
-        shmctl(shmid, IPC_RMID, 0);
+    shmdt(potentialCPatients);
+    shmctl(shmid, IPC_RMID, 0);
 
-        //delete semaphores
-        sem_destroy(potentialCPatients_sem);
-        sem_destroy(coronaPatient);
-        sem_destroy(fluPatient);
+    //delete semaphores
+    sem_destroy(potentialCPatients_sem);
+    sem_destroy(coronaPatient);
+    sem_destroy(fluPatient);
 
     printf("Cleared all semaphore stuff\n");
 
