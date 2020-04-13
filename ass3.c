@@ -84,6 +84,7 @@ int main(){
 
     //Create Shared Memory for integer potentialCPatients (That is why size is of an int)
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
+    int shmid = shmget(101010, sizeof(int), 0644|IPC_CREAT); 
     printf("Shmid : %d\n", shmid);
 
     if (shmid < 0){
