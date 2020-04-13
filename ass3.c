@@ -16,7 +16,7 @@ void* tests_on_patients (void* param){
     // int sem_wait(sem_t *sem);
     sem_wait(potentialCPatients_sem);
 
-    //Using the shared resource
+    //Using the shared resource -----> Critical Section
 
     printf("Value of *potentialCPatients before inc : %d\n", *potentialCPatients);
     *potentialCPatients = (*potentialCPatients) + 1;
@@ -79,12 +79,10 @@ void* tests_on_patients (void* param){
 int main(){ 
 
     //Generate key --> parameter1 = file that is valid and available
-
     //key_t shmkey = ftok("s.c",6); //Directory and number, file to key, it can be the current file also
     //printf("shmkey : %d\n",shmkey); 
 
     //Create Shared Memory for integer potentialCPatients (That is why size is of an int)
-    int shmid = shmget(121121, sizeof(int), 0644|IPC_CREAT); 
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
     printf("Shmid : %d\n", shmid);
 
@@ -93,17 +91,23 @@ int main(){
         exit(1);
     }
 
-    //Attaching shared memory segment (identified by shmid) to the address space of the calling process 
+    //Attaching shared memory segment (identified by shmid) to the address space of the calling process
+    //2nd parameter is NULL so the system chooses a suitable unused address at which to attach the shared mem segment 
     potentialCPatients = (int*) shmat(shmid, NULL, 0);
-    //2nd parameter is NULL - the system chooses a suitable unused address at which to attach the shared mem segment
 
-    *potentialCPatients = 0; //Initializing the value in shared memory
-    printf("potentialCPatients : %d\n", *potentialCPatients);
+    if (potentialCPatients < 0){
+        perror("Shared memory not attached successfully\n");
+        exit(1);
+    } 
+
+    //Initializing the value of potentialCPatients in shared memory 
+    *potentialCPatients = 0;
+    printf("potentialCPatients initial value: %d\n", *potentialCPatients);
 
     int initial_value = 1;// So that at least one of the function can use it
 
-    // sem_init() initializes the unnamed semaphore while sem_open() creates a new POSIX semaphore or 
-    // opens an existing semaphore 
+    // sem_init() initializes the unnamed semaphore while sem_open() creates a new POSIX semaphore 
+    // or opens an existing semaphore 
     potentialCPatients_sem = sem_open ("potentialCPatients_sem", O_CREAT|O_EXCL, 0644, initial_value); 
 
     // name of the semaphore = potentialCPatients_sem(1st parameter)
@@ -120,7 +124,7 @@ int main(){
     sem_unlink("potentialCPatients_sem");
     //unlink prevents the semaphore existing forever - Once the code/execution is done, the semaphore should not exist
 
-    printf("potentialCPatients_sem INTIALIZATION completed\n");
+    printf("potentialCPatients_sem INITIALIZATION completed\n");
 
     //Creating semaphores coronaPatient and fluPatient
 
@@ -128,19 +132,19 @@ int main(){
 
     coronaPatient = sem_open ("coronaPatient_sem", O_CREAT|O_EXCL, 0645, initial_value);
     sem_unlink("coronaPatient_sem");
-    printf("coronaPatient_sem INTIALIZATION completed\n");
+    printf("coronaPatient_sem INITIALIZATION completed\n");
 
     fluPatient = sem_open ("fluPatient_sem", O_CREAT|O_EXCL, 0646, initial_value);
     sem_unlink("fluPatient_sem");
-    printf("fluPatient_sem INTIALIZATION completed\n"); 
+    printf("fluPatient_sem INITIALIZATION completed\n"); 
  
     //Taking patients - input from user
     unsigned int total_pp = 0;
     printf("Total Potential Coronavirus Patients initial value: %u\n", total_pp);
 
-    printf("Enter Potential Coronavirus Patient entered the hospital \n");
+    printf("Enter Potential Coronavirus Patient entered the hospital\n");
     scanf("%u", &total_pp); // with scanf always & used with the variable
-    printf("Patients : %d\n", total_pp);
+    printf("Potential Coronavirus Patient entered by user : %d\n", total_pp);
 
     //Creating N threads 
     pthread_t tids[total_pp]; // Array of thread ids so that every thread has it's unique id
@@ -158,15 +162,13 @@ int main(){
     // Wait until all threads have done their work
     for (i = 0; i < total_pp; i++) {
         pthread_join(tids[i], NULL);
+        printf("Value of *potentialCPatients after joining every thread: %d\n", *potentialCPatients); 
 
-        printf("Value of *potentialCPatients : %d\n", *potentialCPatients); 
-
-        //int *fluPatient1;
         printf("Here\n");             
     }   
 
     // All threads done executing 
-    printf("Done all the work\n");
+    printf("Done all thread work\n");
 
     // Printing semaphore values of Coronapatient and flupatient semaphores
 
@@ -179,7 +181,7 @@ int main(){
     // returned. The absolute value of this negative value is the number of threads waiting on the semaphore.
     // That is why printing values after all threads are done    
 
-    /* Error if we do this
+    /* Error if we do this why????
     int* fluPatient1;    
     sem_getvalue(fluPatient, fluPatient1);
     printf("Value of *fluPatient : %d\n", *fluPatient1);*/
