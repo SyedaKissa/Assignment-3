@@ -32,6 +32,7 @@ void* tests_on_patients (void* param){
     // test_result = 1 --> Positive for Corona Virus --> CoronaPatient
 
     if (test_result == 0){
+        printf("Congratuations! Your results came back negative\n ");
         printf("The random number was inside if1: %d\n", test_result);
 
         //Signal semaphore fluPatient       
@@ -50,6 +51,7 @@ void* tests_on_patients (void* param){
 
     }
     else if (test_result == 1){
+        printf("Your results came back positive. You can't go home now.\n");
         printf("The random number was inside if2: %d\n", test_result);
         
         //Signal semaphore coronaPatient        
@@ -65,6 +67,25 @@ void* tests_on_patients (void* param){
         printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
 
         sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
+
+        printf("Don't worry, you will be fine. We'll just need to carry out 2 more tests\n");
+        int positive_count = 0;
+        //int i = 0;
+
+        while(positive_count < 2){
+            test_result = rand() % 2;
+            printf("Testresults : %d\n", test_result);
+
+            if (test_result == 0){
+                positive_count++;
+            }
+            else if(test_result == 1){
+                positive_count = 0;
+            }
+        }
+
+        printf("Congratuations! You can go home now.\n");
+        sem_wait(coronaPatient);
 
     }
 
