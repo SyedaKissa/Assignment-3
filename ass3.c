@@ -194,7 +194,6 @@ int main(){
 
     // Shared memory has to be detached for potentialCPatients variable = good practice
     shmdt(potentialCPatients);
-
     shmctl(shmid, IPC_RMID, 0);
 
     //delete semaphores
