@@ -18,9 +18,9 @@ void* tests_on_patients (void* param){
 
     //Using the shared resource -----> Critical Section
 
-    printf("Value of *potentialCPatients before inc: %d\n", *potentialCPatients);
+    //printf("Value of *potentialCPatients before inc: %d\n", *potentialCPatients);
     *potentialCPatients = (*potentialCPatients) + 1;
-    printf("Value of *potentialCPatients after inc: %d\n", *potentialCPatients);
+    //printf("Value of *potentialCPatients after inc: %d\n", *potentialCPatients);
 
     sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
@@ -32,8 +32,7 @@ void* tests_on_patients (void* param){
     // test_result = 1 --> Positive for Corona Virus --> CoronaPatient
 
     if (test_result == 0){
-        printf("Congratuations! Your results came back negative\n ");
-        printf("The random number was inside if1: %d\n", test_result);
+        printf("Congratuations! Your results came back negative\n ");        
 
         //Signal semaphore fluPatient       
         sem_post(fluPatient);  // int sem_post(sem_t *sem);
@@ -43,16 +42,15 @@ void* tests_on_patients (void* param){
 
         //Using the shared resource -----> Critical Section
 
-        printf("Value of *potentialCPatients before dec: %d\n", *potentialCPatients);
+        //printf("Value of *potentialCPatients before dec: %d\n", *potentialCPatients);
         *potentialCPatients = (*potentialCPatients) - 1;
-        printf("Value of *potentialCPatients after dec: %d\n", *potentialCPatients);
+        //printf("Value of *potentialCPatients after dec: %d\n", *potentialCPatients);
 
         sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
     }
     else if (test_result == 1){
-        printf("Your results came back positive. You can't go home now.\n");
-        printf("The random number was inside if2: %d\n", test_result);
+        printf("Your results came back positive. You can't go home now.\n");        
         
         //Signal semaphore coronaPatient        
         sem_post(coronaPatient); // int sem_post(sem_t *sem);
@@ -62,9 +60,9 @@ void* tests_on_patients (void* param){
 
         //Using the shared resource -----> Critical Section
 
-        printf("Value of *potentialCPatients before dec : %d\n", *potentialCPatients);
+        //printf("Value of *potentialCPatients before dec : %d\n", *potentialCPatients);
         *potentialCPatients = (*potentialCPatients) - 1;
-        printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
+        //printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
 
         sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
@@ -180,9 +178,8 @@ int main(){
     for (i = 0; i < total_pp; i++) {
         //printf("Value of *potentialCPatients before joining thread(%d) : %d\n", i,*potentialCPatients);
         pthread_join(tids[i], NULL);
-        printf("Value of *potentialCPatients after joining every thread: %d\n", *potentialCPatients); 
-
-        printf("Here\n");             
+        //printf("Value of *potentialCPatients after joining every thread: %d\n", *potentialCPatients); 
+        //printf("Here\n");             
     }   
 
     // All threads done executing 
