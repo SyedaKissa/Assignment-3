@@ -10,8 +10,8 @@ sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
 sem_t* fluPatient;
 int* potentialCPatients;
-//int* fluPatient1;
-//int* coronaPatient1;
+int* fluPatient1;
+int* coronaPatient1;
 
 
 void* tests_on_patients (void* param){ 
@@ -82,12 +82,14 @@ void* tests_on_patients (void* param){
 int main(){ 
 
     //Generate key --> parameter1 = file that is valid and available
+
     //key_t shmkey = ftok("s.c",6); //Directory and number, file to key, it can be the current file also
     //printf("shmkey : %d\n",shmkey); 
 
     //Create Shared Memory for integer potentialCPatients (That is why size is of an int)
     int shmid = shmget(121121, sizeof(int), 0644|IPC_CREAT); 
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
+    printf("Shmid : %d\n", shmid);
 
     if (shmid < 0){
         perror("Shared memory not created successfully\n");
@@ -165,24 +167,28 @@ int main(){
         //int *fluPatient1;
         printf("Here\n");
 
+        //printf("Value of *fluPatient : %d\n", *fluPatient);
+        //1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        int result = sem_getvalue(fluPatient, fluPatient1);
+        if ( result == -1){
+            printf("You got me\n");
+            exit(0);
+        }
 
-
-        printf("Here\n");
-
-        /*sem_getvalue(fluPatient, fluPatient1);
         printf("Not Here\n");
         printf("Value of *fluPatient : %d\n", *fluPatient1);
 
         //int *coronaPatient1;
         sem_getvalue(coronaPatient, coronaPatient1);
-        printf("Value of *coronaPatient : %d\n", *coronaPatient1);*/       
+        printf("Value of *coronaPatient : %d\n", *coronaPatient1);      
     }   
 
     // All threads done executing 
     printf("Done all the work\n");
-    // Shared memory has to be detached for potentialCPatients variable = good practice
 
+    // Shared memory has to be detached for potentialCPatients variable = good practice
     shmdt(potentialCPatients);
+
     shmctl(shmid, IPC_RMID, 0);
 
     //delete semaphores
