@@ -12,17 +12,17 @@ sem_t* fluPatient;
 int* potentialCPatients;
 
 void* tests_on_patients (void* param){ 
-    // need to increment the shared variable potentialCPatients
-    // int sem_wait(sem_t *sem);
-    sem_wait(potentialCPatients_sem);
+    // Need to increment the shared variable potentialCPatients
+    
+    sem_wait(potentialCPatients_sem); // int sem_wait(sem_t *sem);
 
     //Using the shared resource -----> Critical Section
 
-    printf("Value of *potentialCPatients before inc : %d\n", *potentialCPatients);
+    printf("Value of *potentialCPatients before inc: %d\n", *potentialCPatients);
     *potentialCPatients = (*potentialCPatients) + 1;
-    printf("Value of *potentialCPatients after inc : %d\n", *potentialCPatients);
+    printf("Value of *potentialCPatients after inc: %d\n", *potentialCPatients);
 
-    sem_post(potentialCPatients_sem);
+    sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
     // With the help of rand() a number in range can be generated as num = (rand() % (upper–lower+1)) + lower
 
@@ -34,42 +34,37 @@ void* tests_on_patients (void* param){
     if (test_result == 0){
         printf("The random number was inside if1: %d\n", test_result);
 
-        //Signal semaphore fluPatient
-        // int sem_post(sem_t *sem);
-        sem_post(fluPatient);
+        //Signal semaphore fluPatient       
+        sem_post(fluPatient);  // int sem_post(sem_t *sem);
 
         //Decrement the shared variable --> potentialCPatients
+        sem_wait(potentialCPatients_sem); // int sem_wait(sem_t *sem);
 
-        // int sem_wait(sem_t *sem);
-        sem_wait(potentialCPatients_sem);
+        //Using the shared resource -----> Critical Section
 
-        //Using the shared resource
-
-        printf("Value of *potentialCPatients before dec : %d\n", *potentialCPatients);
+        printf("Value of *potentialCPatients before dec: %d\n", *potentialCPatients);
         *potentialCPatients = (*potentialCPatients) - 1;
-        printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
+        printf("Value of *potentialCPatients after dec: %d\n", *potentialCPatients);
 
-        sem_post(potentialCPatients_sem);
+        sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
     }
     else if (test_result == 1){
-        printf("The random number was inside if 2: %d\n", test_result);
-        //Signal semaphore coronaPatient
-        // int sem_post(sem_t *sem);
-        sem_post(coronaPatient);
+        printf("The random number was inside if2: %d\n", test_result);
+        
+        //Signal semaphore coronaPatient        
+        sem_post(coronaPatient); // int sem_post(sem_t *sem);
 
         //Decrement the shared variable --> potentialCPatients
+        sem_wait(potentialCPatients_sem); // int sem_wait(sem_t *sem);
 
-        // int sem_wait(sem_t *sem);
-        sem_wait(potentialCPatients_sem);
-
-        //Using the shared resource
+        //Using the shared resource -----> Critical Section
 
         printf("Value of *potentialCPatients before dec : %d\n", *potentialCPatients);
         *potentialCPatients = (*potentialCPatients) - 1;
         printf("Value of *potentialCPatients after dec : %d\n", *potentialCPatients);
 
-        sem_post(potentialCPatients_sem);
+        sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
     }
 
@@ -162,6 +157,7 @@ int main(){
 
     // Wait until all threads have done their work
     for (i = 0; i < total_pp; i++) {
+        //printf("Value of *potentialCPatients before joining thread(%d) : %d\n", i,*potentialCPatients);
         pthread_join(tids[i], NULL);
         printf("Value of *potentialCPatients after joining every thread: %d\n", *potentialCPatients); 
 
