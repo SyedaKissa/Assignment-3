@@ -116,14 +116,16 @@ int main(){
     shmdt(Buffer2_sem);
     printf("Shmdt for all shared mem done\n");
 
-    shmctl(shmid, IPC_RMID, 0);
-    shmctl(shmid, IPC_RMID, 0);
-    shmctl(shmid, IPC_RMID, 0);
-    shmctl(shmid, IPC_RMID, 0);
+    shmctl(shmid_buffer1, IPC_RMID, 0);
+    shmctl(shmid_buffer2, IPC_RMID, 0);
+    shmctl(shmid_buffer1_sem, IPC_RMID, 0);
+    shmctl(shmid_buffer2_sem, IPC_RMID, 0);
+    printf("shmctl done for all shared mem\n");
 
-
-
-
+    //delete semaphores
+    sem_destroy(Buffer1_sem);
+    sem_destroy(Buffer2_sem);
+    printf("sem_destroy for semaphores done\n");
 
 	return 0;
 }
