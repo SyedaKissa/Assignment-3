@@ -158,6 +158,7 @@ int main(){
 		printf("PrcoessA is done\n");
 
 	} else {
+		wait(NULL); //Wait for ProcessA
 		printf("In Parent"); // Parent Code 
 	    ProcessB = fork();
 
@@ -196,6 +197,7 @@ int main(){
 
 
 	    } else {
+	    	wait(Null);//Wait for ProcessB
 	    	printf("In Parent") //Parent Code
 	        ProcessC = fork();
 
@@ -225,6 +227,13 @@ int main(){
 
 	        	if (ProcessD == 0){
 	        		printf("In ProcessD -> Child4")	// Child D Code
+
+	        		sem_wait(Buffer2);
+
+	        		printf("Buffer2 in Process D: %s", Buffer2);
+
+	        		sem_post(Buffer2);
+	        		printf("All work in ProcessD is done\n");
 	        	}
 	        }
 	    }
