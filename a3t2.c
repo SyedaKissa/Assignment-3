@@ -120,6 +120,53 @@ int main(){
 
 
 
+
+    
+    pid_t ProcessA, ProcessB, ProcessC, ProcessD;
+
+	ProcessA = fork();
+
+	if (ProcessA == 0) {
+	    /* Child A code */
+	} else {
+		/* Parent Code */
+	    ProcessB = fork();
+
+	    if (ProcessB == 0) {
+	        /* Child B code */
+	    } else {
+	        /* Parent Code */
+	        ProcessC = fork();
+
+	        if (ProcessC == 0){
+	        	/* Child C Code */	        	
+	        }else {
+	        	/* Parent Code */
+	        	ProcessD = fork();
+
+	        	if (ProcessD == 0){
+	        		/* Child D Code */
+	        	}
+	        }
+	    }
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //Cleaning shared mem stuff
     shmdt(Buffer1);
     shmdt(Buffer2);
