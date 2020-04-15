@@ -30,6 +30,7 @@ int main(){
         perror("Shared memory for Buffer 1 not attached successfully\n");
         exit(1);
     } 
+    printf("Shared mem work for Buffer 1 done\n");
 
 
 
@@ -52,7 +53,8 @@ int main(){
     if (Buffer2 < 0){
         perror("Shared memory for Buffer 2 not attached successfully\n");
         exit(1);
-    } 
+    }
+    printf("Shared mem work for Buffer 2 done\n"); 
 
 
 
