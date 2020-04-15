@@ -120,52 +120,102 @@ int main(){
 
 
 
-
+/*
     
     pid_t ProcessA, ProcessB, ProcessC, ProcessD;
 
 	ProcessA = fork();
 
 	if (ProcessA == 0) {
-		printf("In ProcessA -> Child1");  /* Child A code */
+		printf("In ProcessA -> Child1");  // Child A code 
+		// Process A needs to read 10 characters from FileA.txt and place it in buffer1
+
+		File *fileA = fopen("file-1.txt", r);
+		if (fileA == NULL){
+			perror("FileA failed to open\n");
+			exit(0);	
+		}
+		else{
+			printf("FileA opened\n");
+		}
+
+		//char fileAstuff[11]; // 11 because last for null character
+		//memset(fileAstuff,'\0',sizeof(fileAstuff)); 
+
+		//Accessing Buffer1 so don't let any other to access it
+
+		sem_wait(Buffer1_sem);
+
+		int i;
+		for(i = 0; i < 10; i++){
+			Buffer1[i] = fgetc(fileA);	
+		}
+		printf("Buffer1 after ProcessA: %s\n", Buffer1);
+
+		sem_post(Buffer1_sem);
+
+		fclose(fileA);
+		printf("PrcoessA is done\n");
+
 	} else {
-		printf("In Parent");/* Parent Code */
+		printf("In Parent"); // Parent Code 
 	    ProcessB = fork();
 
 	    if (ProcessB == 0) {
-	    	printf("In ProcessB-> Child2");/* Child B code */
+	    	printf("In ProcessB-> Child2"); //Child B code
+
+	    	// Process B needs to read 10 characters from FileB.txt and place it in buffer1 after ProcessA 10 characters
+
+			File *fileB = fopen("file-2.txt", r);
+			if (fileB == NULL){
+				perror("FileB failed to open\n");
+				exit(0);	
+			}
+			else{
+				printf("FileB opened\n");
+			}
+
+			//char fileBstuff[11]; // 11 because last for null character
+			//memset(fileBstuff,'\0',sizeof(fileBstuff)); 
+
+			//Accessing Buffer1 so don't let any other to access it
+
+			sem_wait(Buffer1_sem);
+
+			int i,;
+			
+			for(i = 10; i < 20; i++){
+				Buffer1[i] = fgetc(fileB);	
+			}
+			printf("Buffer1 after ProcessA: %s\n", Buffer1);
+
+			sem_post(Buffer1_sem);
+
+			fclose(fileB);
+			printf("Work of Process B is done\n");
+
+
 	    } else {
-	    	printf("In Parent")/* Parent Code */
+	    	printf("In Parent") //Parent Code
 	        ProcessC = fork();
 
 	        if (ProcessC == 0){
-	        	printf("In ProcessC -> Child3")
-	        	/* Child C Code */	        	
+	        	printf("In ProcessC -> Child3") // Child C Code 
+
+	        	        	
 	        }else {
-	        	printf("In Parent"); /* Parent Code */
+	        	printf("In Parent"); // Parent Code
 	        	ProcessD = fork();
 
 	        	if (ProcessD == 0){
-	        		printf("In ProcessD -> Child4")	/* Child D Code */
+	        		printf("In ProcessD -> Child4")	// Child D Code
 	        	}
 	        }
 	    }
-	}
+	} 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+	*/
 
 
     //Cleaning shared mem stuff
