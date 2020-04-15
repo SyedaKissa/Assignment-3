@@ -63,7 +63,6 @@ int main(){
 
 
 
-
     //Creating Shared Memory for buffer1 semaphore
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
     int shmid_buffer1_sem = shmget(131313, 1024, 0644|IPC_CREAT); 
@@ -83,17 +82,6 @@ int main(){
         exit(1);
     }
     printf("Shared mem work for Buffer 1 semaphore done\n"); 
-
-
-
-
-
-
-
-
-
-
-
 
 
 
