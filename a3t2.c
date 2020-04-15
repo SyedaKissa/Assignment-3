@@ -7,7 +7,10 @@
 #include <fcntl.h>          // O_CREAT, O_EXEC 
 
 char* Buffer1;
+sem_t* Buffer1_sem;
+
 char* Buffer2;
+sem_t* Buffer2_sem;
 
 
 int main(){
@@ -54,7 +57,66 @@ int main(){
         perror("Shared memory for Buffer 2 not attached successfully\n");
         exit(1);
     }
-    printf("Shared mem work for Buffer 2 done\n"); 
+    printf("Shared mem work for Buffer 2 done\n");
+
+
+
+
+
+
+    //Creating Shared Memory for buffer1 semaphore
+    //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
+    int shmid_buffer1_sem = shmget(141414, 1024, 0644|IPC_CREAT); 
+    printf("Shmid_buffer1_sem : %d\n", shmid_buffer1_sem);
+
+    if (shmid_buffer1_sem < 0){
+        perror("Shared memory for buffer1 semaphore not created successfully\n");
+        exit(0);
+    }
+
+    //Attaching shared memory segment (identified by shmid_buffer1) to the address space of the calling process
+    //2nd parameter is NULL so the system chooses a suitable unused address at which to attach the shared mem segment 
+    Buffer1_sem = (sem_t*) shmat(shmid_buffer1_sem, NULL, 0);
+
+    if (Buffer1_sem < 0){
+        perror("Shared memory for Buffer 1 semaphore not attached successfully\n");
+        exit(1);
+    }
+    printf("Shared mem work for Buffer 1 semaphore done\n"); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Creating Shared Memory for buffer2 semaphore
+    //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
+    int shmid_buffer2_sem = shmget(141414, 1024, 0644|IPC_CREAT); 
+    printf("Shmid_buffer2_sem : %d\n", shmid_buffer2_sem);
+
+    if (shmid_buffer2_sem < 0){
+        perror("Shared memory for buffer2 semaphore not created successfully\n");
+        exit(0);
+    }
+
+    //Attaching shared memory segment (identified by shmid_buffer1) to the address space of the calling process
+    //2nd parameter is NULL so the system chooses a suitable unused address at which to attach the shared mem segment 
+    Buffer2_sem = (sem_t*) shmat(shmid_buffer2_sem, NULL, 0);
+
+    if (Buffer2_sem < 0){
+        perror("Shared memory for Buffer 2 semaphore not attached successfully\n");
+        exit(1);
+    }
+    printf("Shared mem work for Buffer 2 semaphore done\n"); 
 
 
 
