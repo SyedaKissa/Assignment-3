@@ -5,6 +5,7 @@
 #include <errno.h>          // errno, ECHILD            
 #include <semaphore.h>      // sem_open(), sem_destroy(), sem_wait().. 
 #include <fcntl.h>          // O_CREAT, O_EXEC 
+#include <unistd.h>         // fork
 
 char* Buffer1;
 sem_t* Buffer1_sem;
@@ -120,7 +121,7 @@ int main(){
 
 
 
-/*
+
     
     pid_t ProcessA, ProcessB, ProcessC, ProcessD;
 
@@ -240,7 +241,7 @@ int main(){
 	} 
 
 
-	*/
+	
 
 
     //Cleaning shared mem stuff
