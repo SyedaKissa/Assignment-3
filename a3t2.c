@@ -202,7 +202,23 @@ int main(){
 	        if (ProcessC == 0){
 	        	printf("In ProcessC -> Child3") // Child C Code 
 
-	        	        	
+	        	sem_wait(Buffer1);
+	        	sem_wait(Buffer2);
+
+	        	int i;	        	
+
+	        	for(i = 0; i < 20; i++){
+	        		Buffer2[i] = Buffer1[i];	
+	        	}
+
+	        	printf("Buffer1 after Process C: %s\n", Buffer1);
+	        	printf("Buffer2 after Process C: %s\n", Buffer2);
+
+	        	sem_post(Buffer2);
+	        	sem_post(Buffer2);
+
+	        	printf("All work of Process C is done\n");
+
 	        }else {
 	        	printf("In Parent"); // Parent Code
 	        	ProcessD = fork();
