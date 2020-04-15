@@ -5,6 +5,7 @@
 #include <errno.h>          // errno, ECHILD            
 #include <semaphore.h>      // sem_open(), sem_destroy(), sem_wait().. 
 #include <fcntl.h>          // O_CREAT, O_EXEC 
+ #include <pthread.h>       //pthread_create
 
 sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
@@ -99,7 +100,7 @@ int main(){
     //Create Shared Memory for integer potentialCPatients (That is why size is of an int)
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
     int shmid = shmget(101010, sizeof(int), 0644|IPC_CREAT); 
-    printf("Shmid : %d\n", shmid);
+    //printf("Shmid : %d\n", shmid);
 
     if (shmid < 0){
         perror("Shared memory not created successfully\n");
@@ -117,13 +118,14 @@ int main(){
 
     //Initializing the value of potentialCPatients in shared memory 
     *potentialCPatients = 0;
-    printf("potentialCPatients initial value: %d\n", *potentialCPatients);
+    printf("potentialCPatients initial value: %d\n\n", *potentialCPatients);
 
     int initial_value = 1;// So that at least one of the function can use it
 
     // sem_init() initializes the unnamed semaphore while sem_open() creates a new POSIX semaphore 
     // or opens an existing semaphore 
     potentialCPatients_sem = sem_open ("potentialCPatients_sem", O_CREAT|O_EXCL, 0644, initial_value); 
+
 
     // name of the semaphore = potentialCPatients_sem(1st parameter)
     // If O_CREAT is specified in (2nd paramter),then the semaphore is created if it does not already exist
@@ -147,19 +149,20 @@ int main(){
 
     coronaPatient = sem_open ("coronaPatient_sem", O_CREAT|O_EXCL, 0645, initial_value);
     sem_unlink("coronaPatient_sem");
-    printf("coronaPatient_sem INITIALIZATION completed\n");
+    //printf("coronaPatient_sem INITIALIZATION completed\n");
 
     fluPatient = sem_open ("fluPatient_sem", O_CREAT|O_EXCL, 0646, initial_value);
     sem_unlink("fluPatient_sem");
-    printf("fluPatient_sem INITIALIZATION completed\n"); 
+    //printf("fluPatient_sem INITIALIZATION completed\n"); 
  
     //Taking patients - input from user
     unsigned int total_pp = 0;
-    printf("Total Potential Coronavirus Patients initial value: %u\n", total_pp);
+    //printf("Total Potential Coronavirus Patients initial value: %u\n", total_pp);
 
-    printf("Enter Potential Coronavirus Patient entered the hospital\n");
+    printf("Enter Potential Coronavirus Patient entered the hospital: ");
     scanf("%u", &total_pp); // with scanf always & used with the variable
-    printf("Potential Coronavirus Patient entered by user : %d\n", total_pp);
+    printf("\n");
+    //printf("Potential Coronavirus Patient entered by user : %d\n", total_pp);
 
     //Creating N threads 
     pthread_t tids[total_pp]; // Array of thread ids so that every thread has it's unique id
