@@ -131,7 +131,7 @@ int main(){
 		printf("In ProcessA -> Child1");  // Child A code 
 		// Process A needs to read 10 characters from FileA.txt and place it in buffer1
 
-		File *fileA = fopen("file-1.txt", r);
+		FILE *fileA = fopen("file-1.txt", "r");
 		if (fileA == NULL){
 			perror("FileA failed to open\n");
 			exit(0);	
@@ -168,7 +168,7 @@ int main(){
 
 	    	// Process B needs to read 10 characters from FileB.txt and place it in buffer1 after ProcessA 10 characters
 
-			File *fileB = fopen("file-2.txt", r);
+			FILE *fileB = fopen("file-2.txt", "r");
 			if (fileB == NULL){
 				perror("FileB failed to open\n");
 				exit(0);	
@@ -198,12 +198,12 @@ int main(){
 
 
 	    } else {
-	    	wait(Null);//Wait for ProcessB
-	    	printf("In Parent") //Parent Code
+	    	wait(NUll);//Wait for ProcessB
+	    	printf("In Parent"); //Parent Code
 	        ProcessC = fork();
 
 	        if (ProcessC == 0){
-	        	printf("In ProcessC -> Child3") // Child C Code 
+	        	printf("In ProcessC -> Child3"); // Child C Code 
 
 	        	sem_wait(Buffer1);
 	        	sem_wait(Buffer2);
@@ -235,6 +235,10 @@ int main(){
 
 	        		sem_post(Buffer2);
 	        		printf("All work in ProcessD is done\n");
+	        	}
+	        	else{
+	        		printf("In parrent\n");
+	        		wait(NULL);
 	        	}
 	        }
 	    }
