@@ -73,7 +73,7 @@ int main(){
         exit(0);
     }
 
-    //Attaching shared memory segment (identified by shmid_buffer1) to the address space of the calling process
+    //Attaching shared memory segment (identified by shmid_buffer1_sem) to the address space of the calling process
     //2nd parameter is NULL so the system chooses a suitable unused address at which to attach the shared mem segment 
     Buffer1_sem = (sem_t*) shmat(shmid_buffer1_sem, NULL, 0);
 
@@ -96,7 +96,7 @@ int main(){
         exit(0);
     }
 
-    //Attaching shared memory segment (identified by shmid_buffer1) to the address space of the calling process
+    //Attaching shared memory segment (identified by shmid_buffer2_sem) to the address space of the calling process
     //2nd parameter is NULL so the system chooses a suitable unused address at which to attach the shared mem segment 
     Buffer2_sem = (sem_t*) shmat(shmid_buffer2_sem, NULL, 0);
 
@@ -105,6 +105,22 @@ int main(){
         exit(1);
     }
     printf("Shared mem work for Buffer 2 semaphore done\n"); 
+
+
+
+
+    //Cleaning shared mem stuff
+    shmdt(Buffer1);
+    shmdt(Buffer2);
+    shmdt(Buffer1_sem);
+    shmdt(Buffer2_sem);
+    printf("Shmdt for all shared mem done\n");
+
+    shmctl(shmid, IPC_RMID, 0);
+    shmctl(shmid, IPC_RMID, 0);
+    shmctl(shmid, IPC_RMID, 0);
+    shmctl(shmid, IPC_RMID, 0);
+
 
 
 
