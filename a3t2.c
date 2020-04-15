@@ -39,6 +39,7 @@ int main(){
 
 
 
+
     //Creating Shared Memory for buffer2
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
     int shmid_buffer2 = shmget(121212, 1024, 0644|IPC_CREAT); 
@@ -63,6 +64,7 @@ int main(){
 
 
 
+
     //Creating Shared Memory for buffer1 semaphore
     //0644 = Permission, size is of an integer value so only one value is stored in shared mem (potentialCPatients)
     int shmid_buffer1_sem = shmget(131313, 1024, 0644|IPC_CREAT); 
@@ -80,8 +82,14 @@ int main(){
     if (Buffer1_sem < 0){
         perror("Shared memory for Buffer 1 semaphore not attached successfully\n");
         exit(1);
-    }
-    printf("Shared mem work for Buffer 1 semaphore done\n"); 
+    }    
+
+    Buffer1_sem = sem_open("Buffer1_sem", O_CREAT|O_EXCL, 0644, 1);
+    sem_unlink("Buffer1_sem"); 
+    printf("Shared mem work for Buffer 1 semaphore done\n");
+
+
+
 
 
 
@@ -104,6 +112,9 @@ int main(){
         perror("Shared memory for Buffer 2 semaphore not attached successfully\n");
         exit(1);
     }
+
+    Buffer2_sem = sem_open("Buffer2_sem", O_CREAT|O_EXCL, 0644, 1);
+    sem_unlink("Buffer2_sem"); 
     printf("Shared mem work for Buffer 2 semaphore done\n"); 
 
 
