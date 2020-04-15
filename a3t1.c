@@ -6,7 +6,6 @@
 #include <semaphore.h>      // sem_open(), sem_destroy(), sem_wait().. 
 #include <fcntl.h>          // O_CREAT, O_EXEC 
 
-
 sem_t* potentialCPatients_sem;
 sem_t* coronaPatient;
 sem_t* fluPatient;
@@ -67,7 +66,7 @@ void* tests_on_patients (void* param){
 
         sem_post(potentialCPatients_sem); // int sem_post(sem_t *sem);
 
-        printf("Don't worry, you will be fine. We'll just need to carry out 2 more tests\n");
+        printf("Don't worry, you will be fine. We'll just need to carry out few more tests\n");
         int positive_count = 0;
         //int i = 0;
 
