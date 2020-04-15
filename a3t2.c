@@ -127,25 +127,26 @@ int main(){
 	ProcessA = fork();
 
 	if (ProcessA == 0) {
-	    /* Child A code */
+		printf("In ProcessA -> Child1");  /* Child A code */
 	} else {
-		/* Parent Code */
+		printf("In Parent");/* Parent Code */
 	    ProcessB = fork();
 
 	    if (ProcessB == 0) {
-	        /* Child B code */
+	    	printf("In ProcessB-> Child2");/* Child B code */
 	    } else {
-	        /* Parent Code */
+	    	printf("In Parent")/* Parent Code */
 	        ProcessC = fork();
 
 	        if (ProcessC == 0){
+	        	printf("In ProcessC -> Child3")
 	        	/* Child C Code */	        	
 	        }else {
-	        	/* Parent Code */
+	        	printf("In Parent"); /* Parent Code */
 	        	ProcessD = fork();
 
 	        	if (ProcessD == 0){
-	        		/* Child D Code */
+	        		printf("In ProcessD -> Child4")	/* Child D Code */
 	        	}
 	        }
 	    }
